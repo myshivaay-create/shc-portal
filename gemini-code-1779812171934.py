@@ -401,4 +401,7 @@ elif st.session_state.page == "Reports":
             label="✅ Download Full Report",
             data=output.getvalue(),
             file_name=f"Ayushman_Report_{datetime.date.today().strftime('%d_%b_%Y')}.xlsx",
-            mime="application/vnd.openxml
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+st.sidebar.caption("🚀 Optimized v2.1 • Fast • Secure • Production Ready")
