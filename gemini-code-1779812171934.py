@@ -6,151 +6,83 @@ import plotly.express as px
 from sqlalchemy import text
 
 # ==========================================
-# 1. PAGE CONFIGURATION & PREMIUM V2 THEME
+# 1. PAGE CONFIGURATION & PREMIUM THEME
 # ==========================================
 st.set_page_config(page_title="Ayushman Arogya Mandir Portal", page_icon="⚕️", layout="wide")
 
-# ADVANCED CSS FOR PREMIUM LOOK
 st.markdown("""
     <style>
-    /* Import Premium Font */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
+    .stApp { background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); }
     
-    html, body, [class*="css"] {
-        font-family: 'Poppins', sans-serif;
-    }
-    
-    /* Soft Modern Background */
-    .stApp { 
-        background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); 
-    }
-    
-    /* Main Headers */
-    h1 { color: #0f172a; font-weight: 700; letter-spacing: -1px; text-shadow: 1px 1px 2px rgba(0,0,0,0.05); }
+    h1 { color: #0f172a; font-weight: 700; letter-spacing: -1px; }
     h2, h3 { color: #1e293b; font-weight: 600; }
     h4 { color: #15803d; font-weight: 600; }
     
-    /* Gradient Animated Buttons */
     .stButton>button {
         background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-        color: white; 
-        border-radius: 30px; 
-        font-size: 16px; 
-        font-weight: 600; 
-        padding: 12px 24px; 
-        border: none; 
-        width: 100%;
-        box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
-        transition: all 0.3s ease;
+        color: white; border-radius: 8px; font-weight: 600; padding: 10px 20px; border: none; width: 100%;
+        box-shadow: 0 4px 10px rgba(22, 163, 74, 0.2); transition: all 0.3s ease;
     }
-    .stButton>button:hover { 
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(22, 163, 74, 0.4);
-    }
+    .stButton>button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(22, 163, 74, 0.3); }
     
-    /* Download Button Specific */
-    .stDownloadButton>button {
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-    }
-    
-    /* Beautiful 3D Metric Cards */
-    .metric-container {
-        display: flex; justify-content: space-between; gap: 25px; margin-top: 15px; margin-bottom: 30px;
-    }
+    .metric-container { display: flex; gap: 20px; margin: 15px 0 25px 0; }
     .metric-card {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(10px);
-        border-top: 5px solid #16a34a; 
-        padding: 25px; 
-        border-radius: 15px; 
-        flex: 1;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        text-align: center;
+        background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
+        border-top: 4px solid #16a34a; padding: 20px; border-radius: 12px; flex: 1;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05); text-align: center;
     }
-    .metric-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    }
-    .metric-card p { margin: 0; font-size: 1rem; color: #64748b; font-weight: 500; }
-    .metric-card h2 { margin: 10px 0 0 0; font-size: 2.8rem; color: #0f172a; font-weight: 700; }
-    
-    /* Alert Card Styling */
+    .metric-card p { margin: 0; font-size: 0.95rem; color: #64748b; font-weight: 500; }
+    .metric-card h2 { margin: 10px 0 0 0; font-size: 2.5rem; color: #0f172a; font-weight: 700; }
     .metric-card.alert { border-top-color: #ef4444; }
     .metric-card.alert h2 { color: #ef4444; }
     
-    /* Professional Tabs */
-    .stTabs [data-baseweb="tab-list"] { 
-        gap: 8px; 
-        background-color: rgba(255,255,255,0.5); 
-        padding: 5px; 
-        border-radius: 12px; 
-    }
-    .stTabs [data-baseweb="tab"] { 
-        border-radius: 8px; 
-        padding: 12px 24px; 
-        background-color: transparent; 
-        border: none;
-        font-weight: 500;
-        transition: all 0.2s;
-    }
-    .stTabs [aria-selected="true"] { 
-        background-color: #16a34a !important; 
-        color: white !important; 
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
+    .form-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
     
-    /* Sidebar Styling */
-    [data-testid="stSidebar"] {
-        background-color: #ffffff;
-        box-shadow: 4px 0 15px rgba(0,0,0,0.03);
-    }
-    .sidebar-header { 
-        text-align: center; padding: 20px 0; border-bottom: 2px dashed #e2e8f0; margin-bottom: 25px;
-    }
-    .sidebar-header h2 { font-size: 1.4rem; margin: 15px 0 5px 0; color: #15803d; font-weight: 700;}
+    [data-testid="stSidebar"] { background-color: #ffffff; box-shadow: 4px 0 15px rgba(0,0,0,0.03); }
+    .sidebar-header { text-align: center; padding: 15px 0; border-bottom: 2px dashed #e2e8f0; margin-bottom: 20px;}
+    .sidebar-header h2 { font-size: 1.3rem; margin: 10px 0 5px 0; color: #15803d; font-weight: 700;}
     .sidebar-header p { font-size: 0.85rem; color: #64748b; margin:0; font-weight: 500;}
-    
-    /* Custom Containers */
-    .form-container {
-        background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 2. CLOUD DATABASE CONNECTION
+# 2. CLOUD DATABASE CONNECTION & HELPERS
 # ==========================================
-conn = st.connection("postgresql", type="sql")
+try:
+    conn = st.connection("postgresql", type="sql")
+except Exception:
+    st.error("🚨 Database Connection Error! Please check your Neon URL in Streamlit Advanced Settings (Secrets).")
+    st.stop()
 
 def init_db():
-    with conn.session as s:
-        s.execute(text('''CREATE TABLE IF NOT EXISTS medicines (id SERIAL PRIMARY KEY, name TEXT UNIQUE)'''))
-        s.execute(text('''CREATE TABLE IF NOT EXISTS patients (
-            id SERIAL PRIMARY KEY, name TEXT, age INTEGER, gender TEXT, village TEXT, family_id TEXT, phone TEXT
-        )'''))
-        s.execute(text('''CREATE TABLE IF NOT EXISTS stock (
-            id SERIAL PRIMARY KEY, month_year TEXT, medicine_name TEXT, voucher_no TEXT,
-            qty_received INTEGER, qty_issued INTEGER, balance INTEGER, remark TEXT, page_no TEXT, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )'''))
-        s.execute(text('''CREATE TABLE IF NOT EXISTS opd_visits (
-            id SERIAL PRIMARY KEY, patient_id INTEGER, visit_date DATE,
-            vitals TEXT, symptoms TEXT, diagnosis TEXT, treatment TEXT
-        )'''))
-        
-        res = s.execute(text("SELECT COUNT(*) FROM medicines")).fetchone()
-        if res[0] == 0:
-            defaults = ["Tab Paracetamol 500mg", "Tab Amoxicillin 500mg", "ORS Packets", "Tab IFA", "Tab Albendazole 400mg", "Tab Zinc 20mg"]
-            for med in defaults:
-                s.execute(text("INSERT INTO medicines (name) VALUES (:name) ON CONFLICT DO NOTHING"), {"name": med})
-        s.commit()
+    try:
+        with conn.session as s:
+            s.execute(text('''CREATE TABLE IF NOT EXISTS medicines (id SERIAL PRIMARY KEY, name TEXT UNIQUE)'''))
+            s.execute(text('''CREATE TABLE IF NOT EXISTS patients (
+                id SERIAL PRIMARY KEY, name TEXT, age INTEGER, gender TEXT, village TEXT, family_id TEXT, phone TEXT
+            )'''))
+            s.execute(text('''CREATE TABLE IF NOT EXISTS stock (
+                id SERIAL PRIMARY KEY, month_year TEXT, medicine_name TEXT, voucher_no TEXT,
+                qty_received INTEGER, qty_issued INTEGER, balance INTEGER, remark TEXT, page_no TEXT, timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )'''))
+            s.execute(text('''CREATE TABLE IF NOT EXISTS opd_visits (
+                id SERIAL PRIMARY KEY, patient_id INTEGER, visit_date DATE,
+                vitals TEXT, symptoms TEXT, diagnosis TEXT, treatment TEXT
+            )'''))
+            
+            # Default essential meds setup
+            res = s.execute(text("SELECT COUNT(*) FROM medicines")).fetchone()
+            if res[0] == 0:
+                defaults = ["Tab Paracetamol 500mg", "Tab Amoxicillin 500mg", "ORS Packets", "Tab IFA", "Tab Albendazole 400mg", "Tab Zinc 20mg"]
+                for med in defaults:
+                    s.execute(text("INSERT INTO medicines (name) VALUES (:name) ON CONFLICT DO NOTHING"), {"name": med})
+            s.commit()
+    except Exception as e:
+        st.warning("System is initializing database structures. Ensure your Secrets are correct.")
 
-try:
-    init_db()
-except Exception as e:
-    st.error("Database Connection Error! Check Streamlit Secrets.")
-    st.stop()
+init_db()
 
 def run_query(query, params=None):
     if params is None: params = {}
@@ -162,8 +94,10 @@ def execute_query(query, params=None):
         s.execute(text(query), params)
         s.commit()
 
+@st.cache_data(ttl=60) # Caches data for 60 seconds to speed up the app
 def get_all_balances():
-    return run_query("SELECT medicine_name, SUM(qty_received) - SUM(qty_issued) as current_balance FROM stock GROUP BY medicine_name")
+    df = run_query("SELECT medicine_name, SUM(qty_received) - SUM(qty_issued) as current_balance FROM stock GROUP BY medicine_name")
+    return df if not df.empty else pd.DataFrame(columns=["medicine_name", "current_balance"])
 
 def get_med_balance(med_name):
     df = run_query("SELECT SUM(qty_received) - SUM(qty_issued) as bal FROM stock WHERE medicine_name=:med", {"med": med_name})
@@ -178,28 +112,25 @@ def nav_to(page_name): st.session_state.page = page_name
 with st.sidebar:
     st.markdown("""
         <div class="sidebar-header">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/National_Health_Mission_Logo.svg/300px-National_Health_Mission_Logo.svg.png" width="120" style="border-radius: 10px;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/National_Health_Mission_Logo.svg/300px-National_Health_Mission_Logo.svg.png" width="100">
             <h2>Ayushman Arogya Mandir</h2>
             <p>🌟 Rural Health Care Portal</p>
         </div>
     """, unsafe_allow_html=True)
     
-    st.write("### 📌 Navigation Menu")
-    PAGES = {"🏠 Dashboard": "Dashboard", "👥 Master Data": "Master Data", "📦 Stock Inventory": "Stock Inventory", "🩺 Smart OPD (AI)": "Smart OPD (AI)", "📊 Analytics & Export": "Reports & Analytics"}
+    PAGES = {"🏠 Dashboard": "Dashboard", "👥 Master Data": "Master Data", "📦 Stock Inventory": "Stock Inventory", "🩺 Smart OPD (AI)": "Smart OPD (AI)", "📊 Analytics & Export": "Reports"}
     
     for label, page_name in PAGES.items():
         if st.button(label, key=f"nav_{page_name}"): 
             nav_to(page_name)
             st.rerun()
-            
-    st.markdown("<br><br><br><p style='text-align:center; color:#94a3b8; font-size:12px;'>Secure Portal V2.0<br>Connected to Cloud DB</p>", unsafe_allow_html=True)
 
 # ==========================================
 # 4. PAGE: DASHBOARD
 # ==========================================
 if st.session_state.page == "Dashboard":
     st.markdown("<h1>👋 Welcome back, CHO!</h1>", unsafe_allow_html=True)
-    st.markdown(f"<p style='color:#64748b; font-size:16px;'>Overview for today: <b>{datetime.date.today().strftime('%A, %B %d, %Y')}</b></p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color:#64748b;'>Overview for today: <b>{datetime.date.today().strftime('%A, %B %d, %Y')}</b></p>", unsafe_allow_html=True)
     
     today_opd = run_query("SELECT COUNT(*) as c FROM opd_visits WHERE visit_date=:d", {"d": str(datetime.date.today())}).iloc[0]['c']
     stock_df = get_all_balances()
@@ -208,29 +139,20 @@ if st.session_state.page == "Dashboard":
     
     st.markdown(f"""
         <div class="metric-container">
-            <div class="metric-card">
-                <p>🩺 Today's OPD</p>
-                <h2>{today_opd}</h2>
-            </div>
-            <div class="metric-card">
-                <p>👥 Total Citizens</p>
-                <h2>{total_reg}</h2>
-            </div>
-            <div class="metric-card alert">
-                <p>⚠️ Low Stock Items</p>
-                <h2>{low_stock}</h2>
-            </div>
+            <div class="metric-card"><p>🩺 Today's OPD</p><h2>{today_opd}</h2></div>
+            <div class="metric-card"><p>👥 Total Citizens</p><h2>{total_reg}</h2></div>
+            <div class="metric-card alert"><p>⚠️ Low Stock Items</p><h2>{low_stock}</h2></div>
         </div>
     """, unsafe_allow_html=True)
     
     st.markdown("### ⚡ Quick Launch")
     q1, q2, q3 = st.columns(3)
     with q1:
-        if st.button("📝 Register New Patient"): nav_to("Smart OPD (AI)"); st.rerun()
+        if st.button("📝 Start Smart OPD"): nav_to("Smart OPD (AI)"); st.rerun()
     with q2:
-        if st.button("📥 Update Stock Entry"): nav_to("Stock Inventory"); st.rerun()
+        if st.button("📥 Update Stock"): nav_to("Stock Inventory"); st.rerun()
     with q3:
-        if st.button("📈 Download Report"): nav_to("Reports & Analytics"); st.rerun()
+        if st.button("📈 Download Report"): nav_to("Reports"); st.rerun()
 
 # ==========================================
 # 5. PAGE: MASTER DATA
@@ -242,15 +164,20 @@ elif st.session_state.page == "Master Data":
     with tab1:
         st.markdown("<div class='form-container'>", unsafe_allow_html=True)
         st.info("Upload Village Survey / Jan Aadhaar Excel (.xlsx)")
-        uploaded_excel = st.file_uploader("Select File", type=['xlsx'])
+        uploaded_excel = st.file_uploader("Select File", type=['xlsx'], key="pat_upload")
         if uploaded_excel:
-            df = pd.read_excel(uploaded_excel, engine='openpyxl')
-            if st.button("Import Data to Cloud"):
-                for _, row in df.iterrows():
-                    execute_query("INSERT INTO patients (name, age, gender, village, family_id, phone) VALUES (:name, :age, :gender, :village, :fid, :phone)", 
-                                  {"name": str(row.get('Name','')), "age": int(row.get('Age',0)), "gender": str(row.get('Gender','')), "village": str(row.get('Village','')), "fid": str(row.get('FamilyID','')), "phone": str(row.get('Phone',''))})
-                st.success("Citizen Data Imported Successfully!")
-        st.markdown("<br><b>Recent Registrations:</b>", unsafe_allow_html=True)
+            try:
+                df = pd.read_excel(uploaded_excel, engine='openpyxl')
+                if st.button("Import Data to Cloud"):
+                    with st.spinner("Importing data..."):
+                        for _, row in df.iterrows():
+                            execute_query("INSERT INTO patients (name, age, gender, village, family_id, phone) VALUES (:n, :a, :g, :v, :f, :p)", 
+                                          {"n": str(row.get('Name','')), "a": int(row.get('Age',0)), "g": str(row.get('Gender','')), "v": str(row.get('Village','')), "f": str(row.get('FamilyID','')), "p": str(row.get('Phone',''))})
+                        st.success("Citizen Data Imported Successfully!")
+            except Exception as e:
+                st.error(f"Error processing file: {e}")
+                
+        st.write("<b>Recent Registrations:</b>", unsafe_allow_html=True)
         st.dataframe(run_query("SELECT * FROM patients ORDER BY id DESC LIMIT 50"), use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
         
@@ -259,9 +186,10 @@ elif st.session_state.page == "Master Data":
         col1, col2 = st.columns([1, 2])
         with col1:
             new_med = st.text_input("Enter New Medicine Name")
-            if st.button("➕ Add to Database") and new_med:
-                execute_query("INSERT INTO medicines (name) VALUES (:name) ON CONFLICT DO NOTHING", {"name": new_med})
-                st.success(f"{new_med} added.")
+            if st.button("➕ Add to Database") and new_med.strip():
+                execute_query("INSERT INTO medicines (name) VALUES (:name) ON CONFLICT DO NOTHING", {"name": new_med.strip()})
+                st.success(f"'{new_med}' added.")
+                st.cache_data.clear() # Clear cache to update dropdowns
         with col2:
             st.dataframe(run_query("SELECT * FROM medicines ORDER BY name"), use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
@@ -273,12 +201,11 @@ elif st.session_state.page == "Stock Inventory":
     st.markdown("<h1>📦 Smart Stock Inventory</h1>", unsafe_allow_html=True)
     med_list = run_query("SELECT name FROM medicines ORDER BY name")['name'].tolist()
     
-    tab1, tab2, tab3 = st.tabs(["✍️ Manual Entry", "📂 Excel Supply Upload", "📋 View Live Register"])
+    tab1, tab2, tab3 = st.tabs(["✍️ Manual Entry", "📂 Excel Bulk Upload", "📋 View Live Register"])
     
     with tab1:
         st.markdown("<div class='form-container'>", unsafe_allow_html=True)
         with st.form("stock_entry"):
-            st.write("#### Add New Transaction")
             c1, c2 = st.columns(2)
             with c1:
                 col_my = st.text_input("1. Month & Year", value=datetime.date.today().strftime("%B %Y"))
@@ -296,31 +223,58 @@ elif st.session_state.page == "Stock Inventory":
                                  VALUES (:my, :med, :vn, :rec, :iss, :bal, :rem, :pg)''', 
                               {"my": col_my, "med": col_med, "vn": col_vn, "rec": col_recv, "iss": col_iss, "bal": new_bal, "rem": col_rem, "pg": col_pg})
                 st.success(f"Transaction Saved! Updated balance for {col_med}: {new_bal}")
+                st.cache_data.clear()
         st.markdown("</div>", unsafe_allow_html=True)
 
     with tab2:
         st.markdown("<div class='form-container'>", unsafe_allow_html=True)
         st.info("Upload CHC e-Aushadhi Supply Receipt (.xlsx)")
-        excel_file = st.file_uploader("Select Excel Receipt", type=['xlsx'])
+        
+        with st.expander("👉 Click to see supported Excel Columns"):
+            st.write("Ensure your Excel file contains one of these combinations:")
+            st.write("- **Medicine Column:** 'Medicine Name', 'Item Name', 'Medicine', 'Item', 'Product'")
+            st.write("- **Quantity Column:** 'Quantity', 'Qty', 'Received', 'Total Qty'")
+
+        excel_file = st.file_uploader("Select Excel Receipt", type=['xlsx'], key="stock_upload")
+        
         if excel_file:
-            df_upload = pd.read_excel(excel_file, engine='openpyxl')
-            extracted = []
-            for _, row in df_upload.iterrows():
-                med_name = row.get('Medicine Name', row.get('Item Name', ''))
-                qty = row.get('Quantity', row.get('Qty', row.get('Received', 0)))
-                if pd.notna(med_name) and str(med_name).strip() != '':
-                    extracted.append({"month_year": datetime.date.today().strftime("%B %Y"), "medicine_name": str(med_name), "voucher_no": "UPLOAD", "qty_received": int(qty) if pd.notna(qty) else 0, "qty_issued": 0, "remark": "Bulk Entry", "page_no": "1"})
-            
-            if extracted:
-                edited_df = st.data_editor(pd.DataFrame(extracted), num_rows="dynamic", use_container_width=True)
-                if st.button("✅ Confirm & Save All"):
-                    for _, row in edited_df.iterrows():
-                        execute_query("INSERT INTO medicines (name) VALUES (:name) ON CONFLICT DO NOTHING", {"name": row['medicine_name']})
-                        new_bal = get_med_balance(row['medicine_name']) + int(row['qty_received']) - int(row['qty_issued'])
-                        execute_query('''INSERT INTO stock (month_year, medicine_name, voucher_no, qty_received, qty_issued, balance, remark, page_no)
-                                         VALUES (:my, :med, :vn, :rec, :iss, :bal, :rem, :pg)''', 
-                                      {"my": row['month_year'], "med": row['medicine_name'], "vn": row['voucher_no'], "rec": row['qty_received'], "iss": row['qty_issued'], "bal": new_bal, "rem": row['remark'], "pg": row['page_no']})
-                    st.success("Stock updated from Excel!")
+            try:
+                df_upload = pd.read_excel(excel_file, engine='openpyxl')
+                df_upload.columns = df_upload.columns.astype(str).str.strip().str.title()
+                
+                extracted = []
+                for _, row in df_upload.iterrows():
+                    med_name = row.get('Medicine Name', row.get('Item Name', row.get('Medicine', row.get('Item', row.get('Product', '')))))
+                    qty = row.get('Quantity', row.get('Qty', row.get('Received', row.get('Total Qty', 0))))
+                    
+                    if pd.notna(med_name) and str(med_name).strip() != '':
+                        extracted.append({
+                            "month_year": datetime.date.today().strftime("%B %Y"), 
+                            "medicine_name": str(med_name).strip(), 
+                            "voucher_no": "UPLOAD", 
+                            "qty_received": int(qty) if pd.notna(qty) else 0, 
+                            "qty_issued": 0, 
+                            "remark": "Bulk Entry", "page_no": "1"
+                        })
+                
+                if extracted:
+                    st.success(f"✅ {len(extracted)} Medicines extracted. Review and Save below:")
+                    edited_df = st.data_editor(pd.DataFrame(extracted), num_rows="dynamic", use_container_width=True)
+                    if st.button("✅ Confirm & Save All to Database"):
+                        for _, row in edited_df.iterrows():
+                            execute_query("INSERT INTO medicines (name) VALUES (:name) ON CONFLICT DO NOTHING", {"name": row['medicine_name']})
+                            new_bal = get_med_balance(row['medicine_name']) + int(row['qty_received']) - int(row['qty_issued'])
+                            execute_query('''INSERT INTO stock (month_year, medicine_name, voucher_no, qty_received, qty_issued, balance, remark, page_no)
+                                             VALUES (:my, :med, :vn, :rec, :iss, :bal, :rem, :pg)''', 
+                                          {"my": row['month_year'], "med": row['medicine_name'], "vn": row['voucher_no'], "rec": row['qty_received'], "iss": row['qty_issued'], "bal": new_bal, "rem": row['remark'], "pg": row['page_no']})
+                        st.success("Stock successfully updated from Excel!")
+                        st.cache_data.clear()
+                        st.balloons()
+                else:
+                    st.error("❌ No matching columns found. Your file has these columns:")
+                    st.write(list(df_upload.columns))
+            except Exception as e:
+                st.error(f"Error reading file: {e}")
         st.markdown("</div>", unsafe_allow_html=True)
 
     with tab3:
@@ -334,7 +288,7 @@ elif st.session_state.page == "Smart OPD (AI)":
     
     patients = run_query("SELECT * FROM patients")
     if patients.empty:
-        st.warning("Please add patient data in Master Data first.")
+        st.warning("⚠️ No patients found. Please add citizens in Master Data first.")
     else:
         pat_dict = {f"{r['name']} (Age: {r['age']} | ID: {r['family_id']})": (r['id'], r['age']) for _, r in patients.iterrows()}
         c1, c2 = st.columns([1.2, 1])
@@ -344,7 +298,7 @@ elif st.session_state.page == "Smart OPD (AI)":
             st.markdown("#### 👤 Patient Assessment")
             selected_pat = st.selectbox("Select Patient", list(pat_dict.keys()))
             pat_id, pat_age = pat_dict[selected_pat]
-            pat_weight = st.number_input("Weight (Kg) (Required for pediatric calculation)", value=60 if pat_age > 12 else (pat_age*2)+8)
+            pat_weight = st.number_input("Weight (Kg) (Required for pediatric dosage)", value=60 if pat_age > 12 else (pat_age*2)+8)
             
             st.write("---")
             st.write("**Vitals Check**")
@@ -431,22 +385,23 @@ elif st.session_state.page == "Smart OPD (AI)":
                             execute_query('''INSERT INTO stock (month_year, medicine_name, voucher_no, qty_received, qty_issued, balance, remark, page_no)
                                              VALUES (:my, :med, :vn, :rec, :iss, :bal, :rem, :pg)''', 
                                           {"my": my_str, "med": item['med'], "vn": "OPD-AUTO", "rec": 0, "iss": item['qty'], "bal": new_bal, "rem": "OPD Dispense", "pg": "OPD"})
+                        st.cache_data.clear() # Clear stock cache
                     
                     for key in ['temp_diagnosis', 'temp_treatment', 'temp_symp', 'temp_vitals', 'dispense_list']: del st.session_state[key]
-                    st.success("Visit Logged Successfully!")
+                    st.success("✅ Visit Logged Successfully!")
             st.markdown("</div>", unsafe_allow_html=True)
 
 # ==========================================
 # 8. PAGE: REPORTS & ANALYTICS
 # ==========================================
-elif st.session_state.page == "Reports & Analytics":
+elif st.session_state.page == "Reports":
     st.markdown("<h1>📊 Analytics & Cloud Export</h1>", unsafe_allow_html=True)
     
     opd_df = run_query("SELECT visit_date, COUNT(id) as patients FROM opd_visits GROUP BY visit_date")
     if not opd_df.empty: 
         st.markdown("<div class='form-container'>", unsafe_allow_html=True)
         fig = px.bar(opd_df, x='visit_date', y='patients', title="Daily OPD Footfall", color_discrete_sequence=['#16a34a'])
-        fig.update_layout(plot_bgcolor='white', paper_bgcolor='white')
+        fig.update_layout(plot_bgcolor='white', paper_bgcolor='white', margin=dict(t=40, b=0, l=0, r=0))
         st.plotly_chart(fig, use_container_width=True)
         st.markdown("</div><br>", unsafe_allow_html=True)
     
@@ -456,9 +411,12 @@ elif st.session_state.page == "Reports & Analytics":
     st.dataframe(full_stock, use_container_width=True)
     st.markdown("</div><br>", unsafe_allow_html=True)
     
+    st.info("Download your complete Sub-Center Register in Excel format.")
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine='openpyxl') as writer:
-        run_query("SELECT p.name, o.* FROM opd_visits o JOIN patients p ON o.patient_id = p.id").to_excel(writer, index=False, sheet_name='OPD_Register')
+        opd_full = run_query("SELECT p.name as patient_name, o.* FROM opd_visits o JOIN patients p ON o.patient_id = p.id")
+        if not opd_full.empty: opd_full.to_excel(writer, index=False, sheet_name='OPD_Register')
+        
         run_query("SELECT * FROM stock").to_excel(writer, index=False, sheet_name='Stock_Ledger')
         full_stock.to_excel(writer, index=False, sheet_name='Current_Balances')
         
